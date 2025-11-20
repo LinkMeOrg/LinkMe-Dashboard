@@ -4,10 +4,11 @@ import {
   ServerStackIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/solid";
-import { Home } from "@/pages/dashboard";
+import Home from "./pages/dashboard/home";
 import { SignIn } from "@/pages/auth";
 import User from "./pages/dashboard/Users";
 import Message from "./pages/dashboard/Message";
+import NFC from "./pages/dashboard/NFC";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -28,6 +29,12 @@ export const routes = [
         name: "users",
         path: "/users",
         element: <User />,
+      },
+      {
+        icon: <UserGroupIcon {...icon} />,
+        name: "NFC",
+        path: "/nfc",
+        element: <NFC />,
       },
       {
         icon: <TableCellsIcon {...icon} />,
