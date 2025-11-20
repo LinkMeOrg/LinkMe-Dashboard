@@ -22,6 +22,10 @@ export function Tables() {
   const [subject, setSubject] = useState("");
   const [text, setText] = useState("");
 
+  // New state for viewing message
+  const [viewOpen, setViewOpen] = useState(false);
+  const [viewMessage, setViewMessage] = useState("");
+
   const fetchMessages = async () => {
     try {
       const res = await fetch("http://localhost:4000/api/get/contact-messages");
@@ -35,6 +39,11 @@ export function Tables() {
   const handleReply = (email) => {
     setSelectedEmail(email);
     setOpen(true);
+  };
+
+  const handleView = (message) => {
+    setViewMessage(message);
+    setViewOpen(true);
   };
 
   const sendReply = async () => {
@@ -114,7 +123,7 @@ export function Tables() {
                         {new Date(createdAt).toLocaleDateString()}
                       </Typography>
                     </td>
-                    <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <td className="py-3 px-5 border-b border-blue-gray-50 flex gap-2">
                       <Button
                         size="sm"
                         variant="outlined"
@@ -122,6 +131,14 @@ export function Tables() {
                         onClick={() => handleReply(email)}
                       >
                         Reply
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outlined"
+                        color="green"
+                        onClick={() => handleView(message)}
+                      >
+                        View
                       </Button>
                     </td>
                   </tr>
@@ -132,6 +149,7 @@ export function Tables() {
         </CardBody>
       </Card>
 
+      {/* Reply Dialog */}
       <Dialog open={open} handler={() => setOpen(false)}>
         <DialogHeader>Reply to {selectedEmail}</DialogHeader>
         <DialogBody divider className="flex flex-col gap-4">
@@ -152,6 +170,23 @@ export function Tables() {
           </Button>
           <Button color="green" onClick={sendReply}>
             Send Reply
+          </Button>
+        </DialogFooter>
+      </Dialog>
+
+      {/* View Message Dialog */}
+      <Dialog open={viewOpen} handler={() => setViewOpen(false)}>
+        <DialogHeader>Message Content</DialogHeader>
+        <DialogBody divider>
+          <Typography>{viewMessage}</Typography>
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="blue"
+            onClick={() => setViewOpen(false)}
+          >
+            Close
           </Button>
         </DialogFooter>
       </Dialog>
