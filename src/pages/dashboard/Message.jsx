@@ -3,8 +3,6 @@ import {
   CardHeader,
   CardBody,
   Typography,
-  Avatar,
-  Chip,
   Button,
   Dialog,
   DialogHeader,
@@ -14,6 +12,7 @@ import {
   Textarea,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 export function Tables() {
   const [messages, setMessages] = useState([]);
@@ -58,15 +57,38 @@ export function Tables() {
       );
 
       if (res.ok) {
-        alert("Reply sent successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Reply sent successfully!",
+          timer: 2000,
+          showConfirmButton: false,
+          toast: true,
+          position: "top-end",
+        });
         setOpen(false);
         setSubject("");
         setText("");
       } else {
-        alert("Failed to send reply.");
+        Swal.fire({
+          icon: "error",
+          title: "Failed to send reply",
+          timer: 3000,
+          showConfirmButton: false,
+          toast: true,
+          position: "top-end",
+        });
       }
     } catch (err) {
       console.error("Error sending reply:", err);
+      Swal.fire({
+        icon: "error",
+        title: "Error sending reply",
+        text: "Please try again later.",
+        timer: 3000,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+      });
     }
   };
 

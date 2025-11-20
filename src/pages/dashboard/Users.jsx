@@ -28,6 +28,8 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
+import Swal from "sweetalert2";
+
 export function Users() {
   const [usersData, setUsersData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -125,11 +127,25 @@ export function Users() {
         setOpenCreateModal(false);
         fetchUsers();
         resetForm();
-        alert("User created successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "User created successfully!",
+          timer: 2000,
+          showConfirmButton: false,
+          toast: true,
+          position: "top-end",
+        });
       }
     } catch (error) {
       console.error("Error creating user:", error);
-      alert(error.response?.data?.message || "Error creating user");
+      Swal.fire({
+        icon: "error",
+        title: error.response?.data?.message || "Error creating user",
+        timer: 3000,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+      });
     }
   };
 
@@ -139,20 +155,32 @@ export function Users() {
       const response = await axios.put(
         `http://localhost:4000/api/admin/${selectedUser.id}`,
         formData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.data.success) {
         setOpenEditModal(false);
         fetchUsers();
         resetForm();
-        alert("User updated successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "User updated successfully!",
+          timer: 2000,
+          showConfirmButton: false,
+          toast: true,
+          position: "top-end",
+        });
       }
     } catch (error) {
       console.error("Error updating user:", error);
-      alert(error.response?.data?.message || "Error updating user");
+      Swal.fire({
+        icon: "error",
+        title: error.response?.data?.message || "Error updating user",
+        timer: 3000,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+      });
     }
   };
 
@@ -161,19 +189,31 @@ export function Users() {
       const token = localStorage.getItem("token");
       const response = await axios.delete(
         `http://localhost:4000/api/admin/${selectedUser.id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.data.success) {
         setOpenDeleteModal(false);
         fetchUsers();
-        alert("User deleted successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "User deleted successfully!",
+          timer: 2000,
+          showConfirmButton: false,
+          toast: true,
+          position: "top-end",
+        });
       }
     } catch (error) {
       console.error("Error deleting user:", error);
-      alert(error.response?.data?.message || "Error deleting user");
+      Swal.fire({
+        icon: "error",
+        title: error.response?.data?.message || "Error deleting user",
+        timer: 3000,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+      });
     }
   };
 
@@ -183,24 +223,43 @@ export function Users() {
       const response = await axios.patch(
         `http://localhost:4000/api/admin/${userId}/toggle-status`,
         {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.data.success) {
         fetchUsers();
-        alert(response.data.message);
+        Swal.fire({
+          icon: "success",
+          title: response.data.message,
+          timer: 2000,
+          showConfirmButton: false,
+          toast: true,
+          position: "top-end",
+        });
       }
     } catch (error) {
       console.error("Error toggling user status:", error);
-      alert(error.response?.data?.message || "Error toggling user status");
+      Swal.fire({
+        icon: "error",
+        title: error.response?.data?.message || "Error toggling user status",
+        timer: 3000,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+      });
     }
   };
 
   const handleResetPassword = async () => {
     if (resetPasswordData.newPassword !== resetPasswordData.confirmPassword) {
-      alert("Passwords do not match!");
+      Swal.fire({
+        icon: "warning",
+        title: "Passwords do not match!",
+        timer: 2500,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+      });
       return;
     }
 
@@ -209,19 +268,31 @@ export function Users() {
       const response = await axios.post(
         `http://localhost:4000/api/admin/${selectedUser.id}/reset-password`,
         { newPassword: resetPasswordData.newPassword },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.data.success) {
         setOpenResetPasswordModal(false);
         setResetPasswordData({ newPassword: "", confirmPassword: "" });
-        alert("Password reset successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Password reset successfully!",
+          timer: 2000,
+          showConfirmButton: false,
+          toast: true,
+          position: "top-end",
+        });
       }
     } catch (error) {
       console.error("Error resetting password:", error);
-      alert(error.response?.data?.message || "Error resetting password");
+      Swal.fire({
+        icon: "error",
+        title: error.response?.data?.message || "Error resetting password",
+        timer: 3000,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+      });
     }
   };
 

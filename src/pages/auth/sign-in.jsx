@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Input, Button, Typography } from "@material-tailwind/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export function SignIn() {
   const [email, setEmail] = useState("");
@@ -18,12 +19,28 @@ export function SignIn() {
 
       const token = res.data.token;
       localStorage.setItem("token", token);
-      alert("Login successful!");
+
+      Swal.fire({
+        icon: "success",
+        title: "Login successful!",
+        timer: 2000,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+      });
 
       // Redirect to dashboard/home
       navigate("/dashboard/home");
     } catch (err) {
-      alert(err?.response?.data?.message || "Login failed");
+      Swal.fire({
+        icon: "error",
+        title: "Login failed",
+        text: err?.response?.data?.message || "Login failed",
+        timer: 3000,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+      });
     }
   };
 
