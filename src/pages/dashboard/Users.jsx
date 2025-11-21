@@ -76,37 +76,36 @@ export function Users() {
 
   const fetchUsers = async () => {
     try {
-      console.log("🔄 Fetching users...");
-
       setLoading(true);
-
       const token = localStorage.getItem("token");
 
-      const response = await axios.get("http://localhost:4000/api/all", {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.get("http://localhost:4000/api/admin/all", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Cache-Control": "no-cache",
+        },
         params: {
           page: pagination.page,
           limit: pagination.limit,
-          search: searchQuery,
-          role: roleFilter,
-          verified: verifiedFilter,
+          search: searchQuery || undefined,
+          role: roleFilter || undefined,
+          verified: verifiedFilter === "" ? undefined : verifiedFilter,
         },
       });
 
       console.log("📥 API Response:", response.data);
 
-      // response.data is the array
-      if (Array.isArray(response.data)) {
-        console.log("✅ Users received:", response.data);
+      // Check if response has the wrapped format
+      if (response.data.success && response.data.data) {
+        setUsersData(response.data.data);
+        setPagination(response.data.pagination);
+      } else if (Array.isArray(response.data)) {
+        // Fallback for plain array response
         setUsersData(response.data);
-
-        // optional: no pagination returned, so keep your existing pagination
-        console.log("ℹ️ No pagination data returned from backend");
-      } else {
-        console.warn("⚠️ Backend did not return an array.");
       }
-    } catch (err) {
-      console.error("❌ Error fetching users:", err);
+    } catch (error) {
+      console.error("❌ Error fetching users:", error);
+      setUsersData([]);
     } finally {
       setLoading(false);
     }
@@ -391,7 +390,6 @@ export function Users() {
             >
               <Option value="">All Roles</Option>
               <Option value="user">User</Option>
-              <Option value="business">Business</Option>
               <Option value="admin">Admin</Option>
             </Select>
             <Select
@@ -637,71 +635,75 @@ export function Users() {
       <Dialog open={openCreateModal} handler={setOpenCreateModal} size="md">
         <DialogHeader>Create New User</DialogHeader>
         <DialogBody divider className="h-[400px] overflow-y-scroll">
-          <div className="grid grid-cols-1 gap-4">
-            <Input
-              label="First Name"
-              value={formData.firstName}
-              onChange={(e) =>
-                setFormData({ ...formData, firstName: e.target.value })
-              }
-            />
-            <Input
-              label="Second Name (Optional)"
-              value={formData.secondName}
-              onChange={(e) =>
-                setFormData({ ...formData, secondName: e.target.value })
-              }
-            />
-            <Input
-              label="Last Name"
-              value={formData.lastName}
-              onChange={(e) =>
-                setFormData({ ...formData, lastName: e.target.value })
-              }
-            />
-            <Input
-              label="Email"
-              type="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
-            <Input
-              label="Phone Number"
-              value={formData.phoneNumber}
-              onChange={(e) =>
-                setFormData({ ...formData, phoneNumber: e.target.value })
-              }
-            />
-            <Input
-              label="Password"
-              type="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
-            <Select
-              label="Role"
-              value={formData.role}
-              onChange={(val) => setFormData({ ...formData, role: val })}
-            >
-              <Option value="user">User</Option>
-              <Option value="business">Business</Option>
-              <Option value="admin">Admin</Option>
-            </Select>
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={formData.isVerified}
+          {selectedUser ? (
+            <div className="grid grid-cols-1 gap-4">
+              <Input
+                label="First Name"
+                value={formData.firstName}
                 onChange={(e) =>
-                  setFormData({ ...formData, isVerified: e.target.checked })
+                  setFormData({ ...formData, firstName: e.target.value })
                 }
               />
-              <Typography variant="small">Mark as Verified</Typography>
+              <Input
+                label="Second Name (Optional)"
+                value={formData.secondName}
+                onChange={(e) =>
+                  setFormData({ ...formData, secondName: e.target.value })
+                }
+              />
+              <Input
+                label="Last Name"
+                value={formData.lastName}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastName: e.target.value })
+                }
+              />
+              <Input
+                label="Email"
+                type="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+              />
+              <Input
+                label="Phone Number"
+                value={formData.phoneNumber}
+                onChange={(e) =>
+                  setFormData({ ...formData, phoneNumber: e.target.value })
+                }
+              />
+              <Input
+                label="Password"
+                type="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+              />
+              <Select
+                label="Role"
+                value={formData.role}
+                onChange={(val) => setFormData({ ...formData, role: val })}
+              >
+                <Option value="user">User</Option>
+                <Option value="business">Business</Option>
+                <Option value="admin">Admin</Option>
+              </Select>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={formData.isVerified}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isVerified: e.target.checked })
+                  }
+                />
+                <Typography variant="small">Mark as Verified</Typography>
+              </div>
             </div>
-          </div>
+          ) : (
+            <p>No user selected</p>
+          )}
         </DialogBody>
         <DialogFooter>
           <Button
@@ -768,7 +770,6 @@ export function Users() {
               onChange={(val) => setFormData({ ...formData, role: val })}
             >
               <Option value="user">User</Option>
-              <Option value="business">Business</Option>
               <Option value="admin">Admin</Option>
             </Select>
             <div className="flex items-center gap-2">
