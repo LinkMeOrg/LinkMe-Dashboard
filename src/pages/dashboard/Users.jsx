@@ -79,19 +79,22 @@ export function Users() {
       setLoading(true);
       const token = localStorage.getItem("token");
 
-      const response = await axios.get("http://localhost:4000/api/admin/all", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Cache-Control": "no-cache",
-        },
-        params: {
-          page: pagination.page,
-          limit: pagination.limit,
-          search: searchQuery || undefined,
-          role: roleFilter || undefined,
-          verified: verifiedFilter === "" ? undefined : verifiedFilter,
-        },
-      });
+      const response = await axios.get(
+        "https://linkme-api.onrender.com/api/admin/all",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Cache-Control": "no-cache",
+          },
+          params: {
+            page: pagination.page,
+            limit: pagination.limit,
+            search: searchQuery || undefined,
+            role: roleFilter || undefined,
+            verified: verifiedFilter === "" ? undefined : verifiedFilter,
+          },
+        }
+      );
 
       console.log("📥 API Response:", response.data);
 
@@ -115,7 +118,7 @@ export function Users() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:4000/api/admin/create",
+        "https://linkme-api.onrender.com/api/admin/create",
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -152,7 +155,7 @@ export function Users() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        `http://localhost:4000/api/admin/${selectedUser.id}`,
+        `https://linkme-api.onrender.com/api/admin/${selectedUser.id}`,
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -187,7 +190,7 @@ export function Users() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.delete(
-        `http://localhost:4000/api/admin/${selectedUser.id}`,
+        `https://linkme-api.onrender.com/api/admin/${selectedUser.id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -220,7 +223,7 @@ export function Users() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.patch(
-        `http://localhost:4000/api/admin/${userId}/toggle-status`,
+        `https://linkme-api.onrender.com/api/admin/${userId}/toggle-status`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -265,7 +268,7 @@ export function Users() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        `http://localhost:4000/api/admin/${selectedUser.id}/reset-password`,
+        `https://linkme-api.onrender.com/api/admin/${selectedUser.id}/reset-password`,
         { newPassword: resetPasswordData.newPassword },
         { headers: { Authorization: `Bearer ${token}` } }
       );

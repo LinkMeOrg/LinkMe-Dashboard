@@ -27,7 +27,9 @@ export function Tables() {
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/get/contact-messages");
+      const res = await fetch(
+        "https://linkme-api.onrender.com/api/get/contact-messages"
+      );
       const data = await res.json();
       setMessages(data.data);
     } catch (err) {
@@ -48,7 +50,7 @@ export function Tables() {
   const sendReply = async () => {
     try {
       const res = await fetch(
-        "http://localhost:4000/api/reply/contact-messages",
+        "https://linkme-api.onrender.com/api/reply/contact-messages",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -29,7 +29,7 @@ export function Tables() {
         const token = localStorage.getItem("token");
 
         const res = await fetch(
-          "http://localhost:4000/api/admin/dashboard/profiles/all",
+          "https://linkme-api.onrender.com/api/admin/dashboard/profiles/all",
           {
             headers: {
               Authorization: `Bearer ${token}`,

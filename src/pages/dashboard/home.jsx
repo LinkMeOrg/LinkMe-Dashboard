@@ -51,7 +51,7 @@ export function Home() {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "http://localhost:4000/api/admin/dashboard/analytics/stats",
+        "https://linkme-api.onrender.com/api/admin/dashboard/analytics/stats",
         {
           headers: {
             Authorization: `Bearer ${token}`,
