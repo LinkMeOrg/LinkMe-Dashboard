@@ -1,108 +1,144 @@
 import { useState } from "react";
+import { Input, Button, Typography } from "@material-tailwind/react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { Eye, EyeOff } from "lucide-react";
 
 export function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:4000/auth/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const res = await axios.post("http://localhost:4000/auth/admin/login", {
+        email,
+        password,
       });
 
-      const data = await res.json();
+      const token = res.data.token;
 
-      if (!res.ok) throw new Error(data.message || "Login failed");
-
-      const token = data.token;
       localStorage.setItem("token", token);
 
-      // Success notification
-      alert("Login successful!");
+      Swal.fire({
+        icon: "success",
+        title: "Login successful!",
+        timer: 2000,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+      });
 
-      // In real app: navigate("/dashboard/home");
-      console.log("Redirecting to dashboard...");
+      // Redirect to dashboard/home
+      navigate("/dashboard/home");
     } catch (err) {
-      alert(err.message || "Login failed");
+      Swal.fire({
+        icon: "error",
+        title: "Login failed",
+        text: err?.response?.data?.message || "Login failed",
+        timer: 3000,
+        showConfirmButton: false,
+        toast: true,
+        position: "top-end",
+      });
     }
   };
 
   return (
-    <section className="m-8 flex gap-4">
-      <div className="w-full lg:w-3/5 mt-24">
-        <div className="text-center">
-          <h2 className="text-4xl font-bold mb-4 text-blue-gray-900">
-            Sign In
-          </h2>
-          <p className="text-lg font-normal text-blue-gray-600">
-            Enter your email and password to Sign In.
-          </p>
-        </div>
-        <div className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2">
-          <div className="mb-1 flex flex-col gap-6">
-            <div>
-              <label className="block text-sm font-medium text-blue-gray-700 mb-2">
-                Your email
-              </label>
-              <input
-                type="email"
-                size="lg"
-                placeholder="name@mail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-3 text-sm border border-blue-gray-200 rounded-lg focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
-              />
+    <section className="min-h-screen flex items-center justify-center bg-gray-50 p-8">
+      <div className="w-full max-w-7xl flex gap-8 items-center">
+        <div className="w-full lg:w-3/5">
+          <div className="bg-white rounded-2xl shadow-xl p-8 lg:p-12 mx-auto max-w-2xl">
+            <div className="text-center mb-8">
+              <Typography variant="h2" className="font-bold mb-4">
+                Sign In
+              </Typography>
+              <Typography
+                variant="paragraph"
+                color="blue-gray"
+                className="text-lg font-normal"
+              >
+                Enter your email and password to Sign In.
+              </Typography>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-blue-gray-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  size="lg"
-                  placeholder="********"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-3 pr-10 text-sm border border-blue-gray-200 rounded-lg focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-gray-500 hover:text-blue-gray-700"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+            <form
+              onSubmit={handleSubmit}
+              className="mt-8 mb-2 mx-auto w-full max-w-md"
+            >
+              <div className="mb-1 flex flex-col gap-6">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="-mb-3 font-medium"
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
-                </button>
+                  Your email
+                </Typography>
+                <Input
+                  size="lg"
+                  placeholder="name@mail.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                  labelProps={{
+                    className: "before:content-none after:content-none",
+                  }}
+                />
+                <div className="mb-1 flex flex-col gap-2 relative">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="-mb-3 font-medium"
+                  >
+                    Password
+                  </Typography>
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    size="lg"
+                    placeholder="********"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="!border-t-blue-gray-200 focus:!border-t-gray-900 pr-12"
+                    labelProps={{
+                      className: "before:content-none after:content-none",
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-gray-500 hover:text-blue-gray-700 transition-colors duration-200"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <button
-            type="submit"
-            onClick={handleSubmit}
-            className="mt-6 w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors"
-          >
-            Sign In
-          </button>
+              <Button
+                type="submit"
+                className="mt-6 shadow-md hover:shadow-lg transition-all duration-300"
+                fullWidth
+              >
+                Sign In
+              </Button>
+            </form>
+          </div>
         </div>
-      </div>
-      <div className="w-2/5 h-full hidden lg:block">
-        <img
-          src="/img/pattern.png"
-          className="h-[40rem] w-full object-cover rounded-3xl"
-          alt="Sign in visual"
-        />
+        <div className="w-2/5 h-full hidden lg:block">
+          <img
+            src="/img/pattern.png"
+            className="h-[40rem] w-full object-cover rounded-3xl shadow-xl"
+            alt="Sign in visual"
+          />
+        </div>
       </div>
     </section>
   );
