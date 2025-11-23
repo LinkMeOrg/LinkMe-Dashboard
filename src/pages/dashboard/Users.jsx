@@ -74,27 +74,26 @@ export function Users() {
     fetchUsers();
   }, [pagination.page, searchQuery, roleFilter, verifiedFilter]);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const fetchUsers = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
 
-      const response = await axios.get(
-        "https://linkme-api.onrender.com/api/admin/all",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Cache-Control": "no-cache",
-          },
-          params: {
-            page: pagination.page,
-            limit: pagination.limit,
-            search: searchQuery || undefined,
-            role: roleFilter || undefined,
-            verified: verifiedFilter === "" ? undefined : verifiedFilter,
-          },
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/admin/all`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Cache-Control": "no-cache",
+        },
+        params: {
+          page: pagination.page,
+          limit: pagination.limit,
+          search: searchQuery || undefined,
+          role: roleFilter || undefined,
+          verified: verifiedFilter === "" ? undefined : verifiedFilter,
+        },
+      });
 
       console.log("📥 API Response:", response.data);
 
@@ -117,11 +116,14 @@ export function Users() {
   const handleCreateUser = async () => {
     try {
       const token = localStorage.getItem("token");
+
       const response = await axios.post(
-        "https://linkme-api.onrender.com/api/admin/create",
+        `${API_URL}/api/admin/create`,
         formData,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -140,6 +142,7 @@ export function Users() {
       }
     } catch (error) {
       console.error("Error creating user:", error);
+
       Swal.fire({
         icon: "error",
         title: error.response?.data?.message || "Error creating user",
@@ -154,10 +157,15 @@ export function Users() {
   const handleUpdateUser = async () => {
     try {
       const token = localStorage.getItem("token");
+
       const response = await axios.put(
-        `https://linkme-api.onrender.com/api/admin/${selectedUser.id}`,
+        `${API_URL}/api/admin/${selectedUser.id}`,
         formData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.data.success) {
@@ -175,6 +183,7 @@ export function Users() {
       }
     } catch (error) {
       console.error("Error updating user:", error);
+
       Swal.fire({
         icon: "error",
         title: error.response?.data?.message || "Error updating user",
@@ -189,9 +198,12 @@ export function Users() {
   const handleDeleteUser = async () => {
     try {
       const token = localStorage.getItem("token");
+
       const response = await axios.delete(
-        `https://linkme-api.onrender.com/api/admin/${selectedUser.id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        `${API_URL}/api/admin/${selectedUser.id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       if (response.data.success) {
@@ -222,10 +234,13 @@ export function Users() {
   const handleToggleStatus = async (userId) => {
     try {
       const token = localStorage.getItem("token");
+
       const response = await axios.patch(
-        `https://linkme-api.onrender.com/api/admin/${userId}/toggle-status`,
+        `${API_URL}/api/admin/${userId}/toggle-status`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       if (response.data.success) {
@@ -267,15 +282,19 @@ export function Users() {
 
     try {
       const token = localStorage.getItem("token");
+
       const response = await axios.post(
-        `https://linkme-api.onrender.com/api/admin/${selectedUser.id}/reset-password`,
+        `${API_URL}/api/admin/${selectedUser.id}/reset-password`,
         { newPassword: resetPasswordData.newPassword },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       if (response.data.success) {
         setOpenResetPasswordModal(false);
         setResetPasswordData({ newPassword: "", confirmPassword: "" });
+
         Swal.fire({
           icon: "success",
           title: "Password reset successfully!",
@@ -287,6 +306,7 @@ export function Users() {
       }
     } catch (error) {
       console.error("Error resetting password:", error);
+
       Swal.fire({
         icon: "error",
         title: error.response?.data?.message || "Error resetting password",

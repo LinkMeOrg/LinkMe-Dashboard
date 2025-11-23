@@ -23,19 +23,18 @@ export function Tables() {
     setOpen(!open);
   };
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
         const token = localStorage.getItem("token");
 
-        const res = await fetch(
-          "https://linkme-api.onrender.com/api/admin/dashboard/profiles/all",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await fetch(`${API_URL}/api/admin/dashboard/profiles/all`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         const data = await res.json();
         setProfiles(data.data || []);

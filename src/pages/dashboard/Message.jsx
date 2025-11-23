@@ -25,11 +25,11 @@ export function Tables() {
   const [viewOpen, setViewOpen] = useState(false);
   const [viewMessage, setViewMessage] = useState("");
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const fetchMessages = async () => {
     try {
-      const res = await fetch(
-        "https://linkme-api.onrender.com/api/get/contact-messages"
-      );
+      const res = await fetch(`${API_URL}/api/get/contact-messages`);
       const data = await res.json();
       setMessages(data.data);
     } catch (err) {
@@ -49,14 +49,11 @@ export function Tables() {
 
   const sendReply = async () => {
     try {
-      const res = await fetch(
-        "https://linkme-api.onrender.com/api/reply/contact-messages",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ to: selectedEmail, subject, text }),
-        }
-      );
+      const res = await fetch(`${API_URL}/api/reply/contact-messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to: selectedEmail, subject, text }),
+      });
 
       if (res.ok) {
         Swal.fire({
@@ -67,6 +64,7 @@ export function Tables() {
           toast: true,
           position: "top-end",
         });
+
         setOpen(false);
         setSubject("");
         setText("");
@@ -82,6 +80,7 @@ export function Tables() {
       }
     } catch (err) {
       console.error("Error sending reply:", err);
+
       Swal.fire({
         icon: "error",
         title: "Error sending reply",

@@ -47,11 +47,14 @@ export function Home() {
     fetchDashboardData();
   }, []);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem("token");
+
       const response = await fetch(
-        "https://linkme-api.onrender.com/api/admin/dashboard/analytics/stats",
+        `${API_URL}/api/admin/dashboard/analytics/stats`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -60,6 +63,7 @@ export function Home() {
       );
 
       const data = await response.json();
+
       if (data.success) {
         setDashboardData(data.data);
       }

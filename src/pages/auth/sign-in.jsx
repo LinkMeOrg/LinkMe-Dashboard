@@ -11,16 +11,18 @@ export function SignIn() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const res = await axios.post("https://linkme-api.onrender.com/auth/admin/login", {
+      const res = await axios.post(`${API_URL}/auth/admin/login`, {
         email,
         password,
       });
 
       const token = res.data.token;
-
       localStorage.setItem("token", token);
 
       Swal.fire({
@@ -32,7 +34,6 @@ export function SignIn() {
         position: "top-end",
       });
 
-      // Redirect to dashboard/home
       navigate("/dashboard/home");
     } catch (err) {
       Swal.fire({
