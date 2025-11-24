@@ -120,7 +120,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
 
 Sidenav.defaultProps = {
   brandImg: "/img/Logo.svg",
-  brandName: "RateNest",
+  brandName: "Dot LinkMe",
 };
 
 Sidenav.propTypes = {
