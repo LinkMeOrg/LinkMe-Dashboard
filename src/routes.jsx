@@ -34,6 +34,12 @@ export const routes = [
         element: <Home />,
       },
       {
+        icon: <ShoppingCartIcon {...icon} />, 
+        name: "orders", 
+        path: "/orders", 
+        element: <Orders />, 
+      },
+      {
         icon: <DocumentTextIcon {...icon} />,
         name: "terms and conditions",
         path: "/terms",
@@ -62,13 +68,6 @@ export const routes = [
         name: "message",
         path: "/message",
         element: <Message />,
-      },
-
-      {
-        icon: <ShoppingCartIcon {...icon} />, // NEW
-        name: "orders", // NEW
-        path: "/orders", // NEW
-        element: <Orders />, // NEW
       },
     ],
   },
