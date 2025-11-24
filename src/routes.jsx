@@ -9,7 +9,8 @@ import {
   ChatBubbleLeftRightIcon,
   ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/solid";
-
+import Orders from "./pages/dashboard/Orders";
+import { ShoppingCartIcon } from "@heroicons/react/24/solid";
 import Home from "./pages/dashboard/home";
 import { SignIn } from "@/pages/auth";
 import User from "./pages/dashboard/Users";
@@ -61,6 +62,13 @@ export const routes = [
         name: "message",
         path: "/message",
         element: <Message />,
+      },
+
+      {
+        icon: <ShoppingCartIcon {...icon} />, // NEW
+        name: "orders", // NEW
+        path: "/orders", // NEW
+        element: <Orders />, // NEW
       },
     ],
   },
